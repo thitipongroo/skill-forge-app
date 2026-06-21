@@ -1,0 +1,104 @@
+// Postgres + real auth. Users sign in with email/password; cross-device sync is
+// just "log in on the other device".
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  lang         String   @default("en")
+  theme        String   @default("light")
+  weeklyGoal   Int      @default(0)
+  remindersOptIn Boolean @default(true)
+  createdAt    DateTime @default(now())
+  skills       Skill[]
+  subs         PushSubscription[]
+}
+
+model Skill {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  why         String   @default("")
+  target      String   @default("")
+  targetHours Int      @default(20)
+  celebrated  Boolean  @default(false)
+  archived    Boolean  @default(false)
+  shareToken  String?  @unique  // public read-only progress link
+  createdAt   DateTime @default(now())
+  subskills   SubSkill[]
+  sessions    Session[]
+  reviews     Review[]
+  principles  PrincipleNote[]
+
+  @@index([userId])
+}
+
+model SubSkill {
+  id      String  @id @default(cuid())
+  skillId String
+  skill   Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  text    String
+  vital   Boolean @default(false)
+  order   Int     @default(0)
+
+  @@index([skillId])
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  skillId    String
+  skill      Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  date       String
+  minutes    Int
+  what       String   @default("")
+  reflection String   @default("")
+  subskillId String?
+  createdAt  DateTime @default(now())
+
+  @@index([skillId])
+}
+
+model Review {
+  id      String  @id @default(cuid())
+  skillId String
+  skill   Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  topic   String
+  box     Int     @default(0)
+  due     String
+  last    String?
+
+  @@index([skillId])
+}
+
+model PrincipleNote {
+  id      String  @id @default(cuid())
+  skillId String
+  skill   Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  key     String
+  done    Boolean @default(false)
+  note    String  @default("")
+
+  @@unique([skillId, key])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
