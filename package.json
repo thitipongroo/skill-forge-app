@@ -1,0 +1,44 @@
+{
+  "name": "skill-forge-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Practice Ledger multi-skill learning tracker with auth, Postgres, cross-device sync, spaced-repetition push reminders, full i18n (EN/TH), and PWA install.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui"
+  },
+  "dependencies": {
+    "next": "14.2.35",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "@prisma/client": "5.18.0",
+    "next-auth": "5.0.0-beta.20",
+    "bcryptjs": "2.4.3",
+    "i18next": "23.12.2",
+    "react-i18next": "15.0.1",
+    "web-push": "3.6.7"
+  },
+  "devDependencies": {
+    "typescript": "5.5.4",
+    "@types/node": "20.14.15",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "@types/bcryptjs": "2.4.6",
+    "@types/web-push": "3.6.3",
+    "prisma": "5.18.0",
+    "vitest": "2.0.5",
+    "@playwright/test": "1.46.0",
+    "@axe-core/playwright": "4.9.1"
+  }
+}
