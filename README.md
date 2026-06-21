@@ -9,6 +9,7 @@ A production-shaped learning tracker: **multiple skills**, **real accounts** (em
 
 ```bash
 npm install
+
 cp .env.example .env
 
 # 1. Start Postgres
